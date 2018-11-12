@@ -1,39 +1,61 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Good coding practices</title>
-    <meta charset="utf-8">
-    <meta name="author" content="Malie Lessard-Therrien" />
-    <meta name="date" content="2018-11-13" />
-    <meta name="keywords" content="r, rmarkdown" />
-    <link rel="stylesheet" href="presentationGCP_MLT.css" type="text/css" />
-  </head>
-  <body>
-    <textarea id="source">
-class: center, middle, inverse, title-slide
-
-# Good coding practices
-## Developing skills in R
-### Malie Lessard-Therrien
-### November 13, 2018
-
 ---
-
+title: "Good coding practices"
+subtitle: "Developing skills in R"
+author: "Malie Lessard-Therrien"
+date: "November 13, 2018"
+institute: DEEP, Stockholm University
+keywords: r, rmarkdown
+output: 
+  xaringan::moon_reader:
+    encoding: 'UTF-8'
+    self_contained: false
+    chakra: 'remark-latest.min.js'
+    css: 'presentationGCP_MLT.css'
+    lib_dir: libs
+    nature:
+      ratio: '4:3'
+      highlightLanguage: r
+      highlightStyle: github
+      highlightLines: true
+      countIncrementalSlides: false
+      slideNumberFormat: "Good coding practices . %current%/%total%"
+editor_options: 
+  chunk_output_type: console
+---
 name: intro
 class: spaced 
 
 ##Good coding practices
 
 ***
+```{r,echo=FALSE,message=FALSE,warning=FALSE,results='hide'}
+# run setup code
 
+# load libraries ---------------------------------------------------------------
+library(knitr)  # runs pandoc
+library(bookdown)  # for markdown
+library(captioner)  # for table and figure captions
 
+suppressPackageStartupMessages(library(tidyverse))
 
+# knitr options ----------------------------------------------------------------
 
-&lt;br&gt;
-&gt; "Let us change our traditional attitude to the construction of programs. Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do." - Donald E. Knuth, *Stanford University*
+knitr::opts_knit$set(progress=TRUE,verbose=TRUE)
+knitr::opts_chunk$set(dev="CairoPNG",results="hold",fig.show="hold",fig.align="left",echo=TRUE,warning=FALSE,message=FALSE)
+```
 
-&lt;br&gt;
-.center[&lt;img src="good_coding_figures/DonaldKnuth.jpg" style="max-width:200px;"&gt;]
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+# load the packages you need
+
+# library(tidyverse)
+# library(ggplot2)  # static graphics
+```
+
+<br>
+> "Let us change our traditional attitude to the construction of programs. Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do." - Donald E. Knuth, *Stanford University*
+
+<br>
+.center[<img src="good_coding_figures/DonaldKnuth.jpg" style="max-width:200px;">]
 
 ???
 Donald E. Knuth: Professor Emeritus at Stanford University. In 1962, he embarked on a monumental seven-volume work titled The Art of Computer Programming, which now occupies him full time. The four volumes released to date are available in nine languages with over one million copies printed. An R script isn’t just telling the computer how to perform calculations on your data. It is also explaining your work to other human beings.
@@ -43,7 +65,7 @@ name: intro1
 ## Why writing nicer code?
 
 ***
-&lt;br&gt;
+<br>
 - easy to read
 - easy to write 
 - runs fast
@@ -59,15 +81,15 @@ name: intro2
 ## Why writing nicer code?
 
 ***
-&lt;br&gt;
+<br>
 - easy to read
 - easy to write 
 - runs fast
 - gives reliable results
 - easy to reuse in new projects
 - easy to share with collaborators
-&lt;br&gt;
-&gt; "The single biggest reason you should write nice code is so that your future
+<br>
+> "The single biggest reason you should write nice code is so that your future
 self can understand it." - Greg Wilson *Software Carpentry Course*
 
 .center[![Greg Wilson](good_coding_figures/GregWilson.jpg)]
@@ -79,13 +101,13 @@ co-founder of Software Carpentry, a non-profit organization that teaches basic c
 name:intro2
 ##Benefits of writing nicer code
 ***
-&lt;br&gt;
+<br>
 - Better science 
-&lt;br&gt;
+<br>
 - More fun 
-&lt;br&gt;
+<br>
 - Become more efficient 
-&lt;br&gt;
+<br>
 - Future employment 
 
 ???
@@ -119,8 +141,7 @@ name: good coding practices1
     + short description
     + your name
     + the date your started the script
-
-```r
+```{r header}
 #####################################
 # title: "Population dynamics of Lathyrus vernus project"
 # subtitle: "Data cleaning"
@@ -138,8 +159,7 @@ name: good coding practices2
     + short description
     + your name
     + the date your started the script
-
-```r
+```{r header2}
 #####################################
 # title: "Population dynamics of Lathyrus vernus project"
 # subtitle: "Data cleaning"
@@ -150,8 +170,7 @@ name: good coding practices2
 
 - Then libraries
 
-
-```r
+```{r libraries}
 library (xaringan)
 library (tidyverse)
 library (ggmap)  # geocode ()
@@ -232,13 +251,12 @@ name: syntax1
 
 Spacing
 
-- Place spaces around all binary operators (=, +, -, &lt;-, etc.)
-
-```r
+- Place spaces around all binary operators (=, +, -, <-, etc.)
+```{r syntax spacing1, eval = FALSE}
 # Good
-average &lt;- mean(speed / 12 + dist, na.rm = T)
+average <- mean(speed / 12 + dist, na.rm = T)
 # Bad
-average&lt;-mean(speed/12+dist,na.rm=T)
+average<-mean(speed/12+dist,na.rm=T)
 ```
 
 
@@ -248,19 +266,17 @@ name: syntax2
 
 Spacing
 
-- place spaces around all binary operators (=, +, -, &lt;-, etc.)
-
-```r
+- place spaces around all binary operators (=, +, -, <-, etc.)
+```{r syntax spacing2, eval = FALSE}
 # Good
-average &lt;- mean(speed / 12 + dist, na.rm = T)
+average <- mean(speed / 12 + dist, na.rm = T)
 # Bad
-average&lt;-mean(speed/12+dist,na.rm=T)
+average<-mean(speed/12+dist,na.rm=T)
 ```
 
 - use brackets and commas like in written English
 - place a space before left parenthesis, except in a function call.
-
-```r
+```{r syntax brackets and comma, eval = FALSE}
 # Good
 if (debug)
 plot(graph1)
@@ -283,10 +299,9 @@ name: syntax3
 
 Spacing
 
-- Extra spacing (i.e., more than one space in a row) is acceptable if it improves alignment of equals signs or arrows (&lt;-).
+- Extra spacing (i.e., more than one space in a row) is acceptable if it improves alignment of equals signs or arrows (<-).
 
-
-```r
+```{r eval = FALSE}
 plot(x    = x.coord,
      y    = y.coord,
      ylim = ylim,
@@ -306,11 +321,10 @@ An opening curly brace should not go on its own line.
 A closing curly brace should always go on its own line.
 Exception: An "else" statement should always be surrounded on the same line by curly braces.
 
-
-```r
+```{r curly braces, eval = FALSE}
 # Good
 if (is.null(ylim)) {
-  ylim &lt;- c(0, 0.06)
+  ylim <- c(0, 0.06)
 }
 if (condition) {
   one line
@@ -320,13 +334,14 @@ if (condition) {
   or more lines
 }
 # Bad
-if (is.null(ylim)) {ylim &lt;- c(0, 0.06)}  # closing curly brace on its own line
+if (is.null(ylim)) {ylim <- c(0, 0.06)}  # closing curly brace on its own line
 if (condition) {
   one or more lines
 }
 else {              # surround "else" statement by curly braces
   one or more lines
 }
+
 ```
 
 ???
@@ -338,10 +353,10 @@ name: line length1
 
 For being concise and increase code readability, keep your lines up to 80 characters. 
 
+```{r line length exceeded1, eval = FALSE}
+# The following line displays which of your species have multiple matches in the synonyms of the dyntaxa table (that's the length(x)>1 part). Check through these to make sure that the first of the multiple answers is the right one. If not (like a hybrid or subspecies rather than the true synonym), we fix that below.
+sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)])[sapply(sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)]),function(x) length(x)>1)] 
 
-```r
-# The following line displays which of your species have multiple matches in the synonyms of the dyntaxa table (that's the length(x)&gt;1 part). Check through these to make sure that the first of the multiple answers is the right one. If not (like a hybrid or subspecies rather than the true synonym), we fix that below.
-sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)])[sapply(sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)]),function(x) length(x)&gt;1)] 
 ```
 
 ---
@@ -350,23 +365,21 @@ name: line length
 
 For being concise and increase code readability, keep your lines up to 80 characters. 
 
+```{r line length exceeded2, eval = FALSE}
+# The following line displays which of your species have multiple matches in the synonyms of the dyntaxa table (that's the length(x)>1 part). Check through these to make sure that the first of the multiple answers is the right one. If not (like a hybrid or subspecies rather than the true synonym), we fix that below.
+sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)])[sapply(sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)]),function(x) length(x)>1)] 
 
-```r
-# The following line displays which of your species have multiple matches in the synonyms of the dyntaxa table (that's the length(x)&gt;1 part). Check through these to make sure that the first of the multiple answers is the right one. If not (like a hybrid or subspecies rather than the true synonym), we fix that below.
-sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)])[sapply(sapply(unique(obs$Species[is.na(obs$dyn.spe)]), function(x) dyn.species$species[grep(x,dyn.species$synonyms)]),function(x) length(x)&gt;1)] 
 ```
 
 
 Set up 80 characters limit:
 - In RStudio, go to
-
-```r
-Tools -&gt; Global Options -&gt; Code -&gt; Display
+```{r line length1, eval = FALSE}
+Tools -> Global Options -> Code -> Display
 ```
 
 - there is a checkbox option: 
-
-```r
+```{r line length2, eval = FALSE}
 [ ] Show margin
     Margin column [80]
 ```
@@ -385,21 +398,19 @@ When indenting your code, use spaces. Never use tabs or mix tabs and spaces.
     * keeping to 80 characters rule
 
 
-
-```r
+```{r indenting1, eval = FALSE}
 ## drop some observations and unused factor levels
-lotrDat &lt;-
+lotrDat <-
   droplevels(subset(lotrDat,
                     !(Race %in% c("Gollum", "Ent", "Dead", "Nazgul"))))
 ```
 
   * to align inside a block delimited by curly braces
     
-
-```r
-jFun &lt;- function(x) {
-    estCoefs &lt;- coef(lm(lifeExp ~ I(year - yearMin), x))
-    names(estCoefs) &lt;- c("intercept", "slope")
+```{r indenting2, eval = FALSE}
+jFun <- function(x) {
+    estCoefs <- coef(lm(lifeExp ~ I(year - yearMin), x))
+    names(estCoefs) <- c("intercept", "slope")
     return(estCoefs)
     }
 ```
@@ -417,31 +428,10 @@ Use comments to describe what your code is meant to do
 - Comment entire code chunks beginning with # and one space.
 - Short comments inside the code can be placed after the code line preceded by two spaces, #, and then one space.
 
-
-```r
+```{r using comments}
 # Exploring the data set iris
 head(iris, n = 10)  # see the 10 first rows (default is 6 rows)
 str(iris)  # see the structure of the dataset
-```
-
-```
-##    Sepal.Length Sepal.Width Petal.Length Petal.Width Species
-## 1           5.1         3.5          1.4         0.2  setosa
-## 2           4.9         3.0          1.4         0.2  setosa
-## 3           4.7         3.2          1.3         0.2  setosa
-## 4           4.6         3.1          1.5         0.2  setosa
-## 5           5.0         3.6          1.4         0.2  setosa
-## 6           5.4         3.9          1.7         0.4  setosa
-## 7           4.6         3.4          1.4         0.3  setosa
-## 8           5.0         3.4          1.5         0.2  setosa
-## 9           4.4         2.9          1.4         0.2  setosa
-## 10          4.9         3.1          1.5         0.1  setosa
-## 'data.frame':	150 obs. of  5 variables:
-##  $ Sepal.Length: num  5.1 4.9 4.7 4.6 5 5.4 4.6 5 4.4 4.9 ...
-##  $ Sepal.Width : num  3.5 3 3.2 3.1 3.6 3.9 3.4 3.4 2.9 3.1 ...
-##  $ Petal.Length: num  1.4 1.4 1.3 1.5 1.4 1.7 1.4 1.5 1.4 1.5 ...
-##  $ Petal.Width : num  0.2 0.2 0.2 0.2 0.2 0.4 0.3 0.2 0.2 0.1 ...
-##  $ Species     : Factor w/ 3 levels "setosa","versicolor",..: 1 1 1 1 1 1 1 1 1 1 ...
 ```
 
 ---
@@ -458,9 +448,9 @@ The tidyverse is a collection of R packages designed for data science. The tidyv
 - purrr: A functional programming toolkit for R
 - forcats: Tools for working with categorical variables (factors)
 
-.center[&lt;img src="good_coding_figures/RforDataScience.png" style="max-width:150px;"&gt;
-&lt;img src="good_coding_figures/HadleyWickham.jpg" style="max-width:150px;"&gt;
-&lt;img src="good_coding_figures/CharlotteWickham.jpg" style="max-width:150px;"&gt;]
+.center[<img src="good_coding_figures/RforDataScience.png" style="max-width:150px;">
+<img src="good_coding_figures/HadleyWickham.jpg" style="max-width:150px;">
+<img src="good_coding_figures/CharlotteWickham.jpg" style="max-width:150px;">]
 
 ???
 Hadley Wickham is a statistician from New Zealand who is currently Chief Scientist at RStudio and an adjunct Professor of statistics at the University of Auckland, Stanford University, and Rice University.
@@ -480,7 +470,7 @@ The tidyverse is a collection of R packages designed for data science. The tidyv
 - purrr: A functional programming toolkit for R
 - magrittr: Improve the readability of R code with the pipe
 
-.center[&lt;img src="good_coding_figures/pipe.jpg" alt="pipe" style="max-width:300px;"&gt;]
+.center[<img src="good_coding_figures/pipe.jpg" alt="pipe" style="max-width:300px;">]
 
 ???
 René François Ghislain Magritte was a Belgian surrealist painter. Pour ce tableau qui suscita bien des questionnements, Magritte s’est justifié :
@@ -521,9 +511,9 @@ In your dataset, you want to;
 
 Keyboard shortcut: **ctrl/cmnd + shift + m** (magrittr)
 
-
-```r
-irisSepalSize &lt;- iris %&gt;%
+```{r iris pipe4, eval=F}
+irisSepalSize <- iris %>%
+    
 ```
 
 ---
@@ -537,14 +527,13 @@ In your dataset, you want to;
 
 Keyboard shortcut: **ctrl/cmnd + shift + m** (magrittr)
 
-
-```r
-irisSepalSize &lt;- iris %&gt;%
+```{r iris pipe5, eval=F}
+irisSepalSize <- iris %>%
   rename(sepal_length = Sepal.Length,  # changes column names
          sepal_width  = Sepal.Width,
          petal_length = Petal.Length,
          petal_width  = Petal.Width,
-         species      = Species) %&gt;% 
+         species      = Species) %>% 
 ```
 
 ---
@@ -558,16 +547,16 @@ In your dataset, you want to;
 
 Keyboard shortcut: **ctrl/cmnd + shift + m** (magrittr)
 
-
-```r
-irisSepalSize &lt;- iris %&gt;%
+```{r iris pipe6, eval=F}
+irisSepalSize <- iris %>%
   rename(sepal_length = Sepal.Length,  # changes column names
          sepal_width  = Sepal.Width,
          petal_length = Petal.Length,
          petal_width  = Petal.Width,
-         species      = Species) %&gt;% 
-  filter(species == "versicolor" &amp;  # is similar to subset
-         petal_length &gt; 4.0) %&gt;% 
+         species      = Species) %>% 
+  filter(species == "versicolor" &  # is similar to subset
+         petal_length > 4.0) %>% 
+  
 ```
 
 ---
@@ -581,16 +570,15 @@ In your dataset, you want to;
 
 Keyboard shortcut: **ctrl/cmnd + shift + m** (magrittr)
 
-
-```r
-irisSepalSize &lt;- iris %&gt;%
+```{r iris pipe7, eval=F}
+irisSepalSize <- iris %>%
   rename(sepal_length = Sepal.Length,  # changes column names
          sepal_width  = Sepal.Width,
          petal_length = Petal.Length,
          petal_width  = Petal.Width,
-         species      = Species) %&gt;% 
-  filter(species == "versicolor" &amp;  # is similar to subset
-         petal_length &gt; 4.0) %&gt;% 
+         species      = Species) %>% 
+  filter(species == "versicolor" &  # is similar to subset
+         petal_length > 4.0) %>% 
   mutate(sepal_size = sepal_length * sepal_width)  # adds a column
 ```
 
@@ -605,26 +593,18 @@ In your dataset, you want to;
 
 Keyboard shortcut: **ctrl/cmnd + shift + m** (magrittr)
 
-
-```r
-irisSepalSize &lt;- iris %&gt;%
+```{r iris pipe8}
+irisSepalSize <- iris %>%
   rename(sepal_length = Sepal.Length,  # changes column names
          sepal_width  = Sepal.Width,
          petal_length = Petal.Length,
          petal_width  = Petal.Width,
-         species      = Species) %&gt;% 
-  filter(species == "versicolor" &amp;  # is similar to subset
-         petal_length &gt; 4.0) %&gt;% 
+         species      = Species) %>% 
+  filter(species == "versicolor" &  # is similar to subset
+         petal_length > 4.0) %>% 
   mutate(sepal_size = sepal_length * sepal_width)  # adds a column
 
 head(irisSepalSize, n = 3)  
-```
-
-```
-##   sepal_length sepal_width petal_length petal_width    species sepal_size
-## 1          7.0         3.2          4.7         1.4 versicolor      22.40
-## 2          6.4         3.2          4.5         1.5 versicolor      20.48
-## 3          6.9         3.1          4.9         1.5 versicolor      21.39
 ```
 
 ???
@@ -658,54 +638,3 @@ name: end-slide
 class: end-slide
 
 # Thank you
-    </textarea>
-<script src="remark-latest.min.js"></script>
-<script>var slideshow = remark.create({
-"ratio": "4:3",
-"highlightLanguage": "r",
-"highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false,
-"slideNumberFormat": "Good coding practices . %current%/%total%"
-});
-if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
-  window.dispatchEvent(new Event('resize'));
-});
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
-  if (!r) return;
-  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
-  d.head.appendChild(s);
-})();</script>
-
-<script>
-(function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
-  for (i = 0; i < codes.length;) {
-    code = codes[i];
-    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
-      text = code.textContent;
-      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
-          /^\$\$(.|\s)+\$\$$/.test(text) ||
-          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
-        code.outerHTML = code.innerHTML;  // remove <code></code>
-        continue;
-      }
-    }
-    i++;
-  }
-})();
-</script>
-<!-- dynamically load mathjax for compatibility with self-contained -->
-<script>
-(function () {
-  var script = document.createElement('script');
-  script.type = 'text/javascript';
-  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
-  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
-    script.src  = script.src.replace(/^https?:/, '');
-  document.getElementsByTagName('head')[0].appendChild(script);
-})();
-</script>
-  </body>
-</html>

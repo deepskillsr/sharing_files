@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Maps in R</title>
+    <meta charset="utf-8">
+    <meta name="author" content="Malie Lessard-Therrien" />
+    <meta name="date" content="2018-11-14" />
+    <meta name="keywords" content="r, rmarkdown, ggmap" />
+    <link rel="stylesheet" href="presentationMap_MLT.css" type="text/css" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# Maps in R
+## Developing skills in R
+### Malie Lessard-Therrien
+### November 14, 2018
+
+---
+
+## Creating maps in R
+
+- Spatial visualization with ggplot2
+- Add data to a map
+- Easy, consistent and modular framework for
+spatial graphics and data analysis
+
+***
+
+.center[&lt;img src="maps_pres_figures/europe_map.png" style="max-width:400px;"&gt;]
+
+---
+## Grammar of graphics (gg)
+
+&lt;br&gt;
+2 principles:
+- distinct layers of graphical elements
+- meaningful plots using aesthetic mapping
+
+***
+
+.center[![layers of a plot](./maps_pres_figures/separate_elements.png)]
+
+
+---
+## Graph elements
+
+ggplot2 Cheatsheet: https://www.rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf
+
+3 essentials:
+- Data (what you collected, in the right format)
+- Aesthetics (aes)
+- Geometries (geom)
+
+
+4 optionals:
+- Facets
+- Coordinates
+- Themes
+- Statistics
+
+.pull-right-70[&lt;img src="maps_pres_figures/graph_layers.png" style="max-width:300px;"&gt;]
+
+
+
+
+---
+class: small-code
+## Basic world map
+
+
+```r
+mapWorld &lt;- ggplot () + 
+  borders ("world",
+          colour = "gray50",
+          fill = "gray50")
+print (mapWorld)
+```
+
+![](Maps_in_R_MLT_files/figure-html/basic_world_map-1.png)&lt;!-- --&gt;
+
+
+---
+## Have geo-referenced data
+
+Coral bleaching data from ReefBase http://www.reefbase.org
+
+```r
+# Upload data
+datCoral &lt;- read.csv("./Data/CoralBleachingData.csv", row.names = 1)
+# head (datCoral) #sanity check
+# str (datCoral)
+```
+
+---
+## Subset data based on bleaching events
+
+
+```r
+levels (datCoral$bleaching_severity)
+```
+
+```
+## [1] "High"             "Low"              "Medium"          
+## [4] "No Bleaching"     "Severity Unknown"
+```
+
+```r
+# Remove the category "No Bleaching" and "Severity Unknown"
+datCoralSub &lt;- datCoral[
+  datCoral$bleaching_severity %in% c("Low","Medium","High"), ]
+
+# Replace the factors in a different order than in alphabetic order
+datCoralSub$bleaching_severity &lt;- factor(
+  datCoralSub$bleaching_severity,
+  levels = levels(datCoralSub$bleaching_severity)[c(2,3,1)]
+  ) 
+```
+
+
+---
+## Add the data to the map
+
+
+```r
+mapCoral &lt;- mapWorld + 
+  geom_point (data = datCoralSub,
+             aes(x = longitude,
+                 y = latitude,
+                 colour = bleaching_severity),
+             alpha = 0.5)
+print (mapCoral)
+```
+
+![](Maps_in_R_MLT_files/figure-html/coral_data_to_map-1.png)&lt;!-- --&gt;
+
+
+---
+## Fine tuning: Adjusting colours
+
+
+```r
+mapColour &lt;- mapCoral +
+  scale_colour_manual (values = c("Low" = "yellow",
+                                  "Medium" = "orange",
+                                  "High" = "red")) 
+
+print(mapColour)
+```
+
+![](Maps_in_R_MLT_files/figure-html/adjusting_colours-1.png)&lt;!-- --&gt;
+
+
+---
+## Fine tuning: Facets
+
+
+```r
+mapFacets &lt;- mapColour +
+  facet_wrap (~ year)
+
+print (mapFacets)
+```
+
+![](Maps_in_R_MLT_files/figure-html/facets-1.png)&lt;!-- --&gt;
+
+
+---
+## Steps to create a map
+
+1.	Have an idea: know what you want to visualize
+2.	Get the map you need
+3.	Get data that is geo-referenced (coordinates of places you want to show)
+4.	Plot map and data together
+5.	Customize: add extra visuals as you want
+    -	Colors
+    -	Facets
+    -	Name of places
+    - Path
+    -	etc
+
+
+---
+## Functions
+
+* &lt;span style="color:red"&gt;get_map()&lt;/span&gt;
+    + get a map from somewhere
+    + arguments: 
+      - &lt;span style="color:orange"&gt;*source*&lt;/span&gt; (Google, Stamen, OpenStreetMap and CloudMade)
+      - &lt;span style="color:orange"&gt;*maptype*&lt;/span&gt;
+      - &lt;span style="color:orange"&gt;*zoom*&lt;/span&gt;
+
+***
+
+.center[&lt;img src="maps_pres_figures/map_types.png" style="max-width:350px;"&gt;]
+  
+---
+## Functions
+
+* &lt;span style="color:red"&gt;get_map()&lt;/span&gt;
+    + get a map from somewhere
+    + arguments: 
+      - &lt;span style="color:orange"&gt;*source*&lt;/span&gt; (Google, Stamen, OpenStreetMap and CloudMade)
+      - &lt;span style="color:orange"&gt;*maptype*&lt;/span&gt;
+      - &lt;span style="color:orange"&gt;*zoom*&lt;/span&gt;
+  
+***
+* &lt;span style="color:red"&gt;ggmap()&lt;/span&gt;
+    + plot the map
+
+
+---
+## Functions
+
+* &lt;span style="color:red"&gt;get_map()&lt;/span&gt;
+    + get a map from somewhere
+    + arguments: 
+      - &lt;span style="color:orange"&gt;*source*&lt;/span&gt; (Google, Stamen, OpenStreetMap and CloudMade)
+      - &lt;span style="color:orange"&gt;*maptype*&lt;/span&gt;
+      - &lt;span style="color:orange"&gt;*zoom*&lt;/span&gt;
+  
+***
+* &lt;span style="color:red"&gt;ggmap()&lt;/span&gt;
+    + plot the map
+* &lt;span style="color:red"&gt;geocode()&lt;/span&gt;
+    + finds latitude and longitude of places
+
+---
+## Functions
+
+* &lt;span style="color:red"&gt;get_map()&lt;/span&gt;
+    + get a map from somewhere
+    + arguments: 
+      - &lt;span style="color:orange"&gt;*source*&lt;/span&gt; (Google, Stamen, OpenStreetMap and CloudMade)
+      - &lt;span style="color:orange"&gt;*maptype*&lt;/span&gt;
+      - &lt;span style="color:orange"&gt;*zoom*&lt;/span&gt;
+  
+***
+* &lt;span style="color:red"&gt;ggmap()&lt;/span&gt;
+    + plot the map
+* &lt;span style="color:red"&gt;geocode()&lt;/span&gt;
+    + finds latitude and longitude of places
+* &lt;span style="color:red"&gt;trek()&lt;/span&gt;
+    + finds coordinates for path between places
+
+
+---
+## Resources
+
+Kahle, D., &amp; Wickham, H. (2013). ggmap: Spatial Visualization with ggplot2. R Journal, 5(1).
+
+
+---
+## Resources
+
+Kahle, D., &amp; Wickham, H. (2013). ggmap: Spatial Visualization with ggplot2. R Journal, 5(1).
+
+Chang, W. (2012). R graphics cookbook: practical recipes for visualizing data. " O'Reilly Media, Inc.".
+
+.center[&lt;img src="maps_pres_figures/rGraphicsCookbook.jpg" style="max-width:300px;"&gt;]
+
+---
+## Resources
+
+Kahle, D., &amp; Wickham, H. (2013). ggmap: Spatial Visualization with ggplot2. R Journal, 5(1).
+
+Chang, W. (2012). R graphics cookbook: practical recipes for visualizing data. " O'Reilly Media, Inc.".
+
+Cheatsheet:
+https://www.nceas.ucsb.edu/~frazier/RSpatialGuides/ggmap/ggmapCheatsheet.pdf
+
+
+---
+## Libraries needed
+
+Get the updated version of ggmap:
+* https://github.com/dkahle/ggmap
+* Author: David Kahle
+  + Baylor University, Waco, Texas
+  
+.center[&lt;img src="maps_pres_figures/davidKahle.png" style="max-width:150px;"&gt;]
+
+
+```r
+#if(!requireNamespace("devtools")) install.packages("devtools")
+#devtools::install_github("dkahle/ggmap", ref = "tidyup")
+library (ggmap)
+library (tidyverse)
+```
+
+???
+Devtools: (developper tools) providing R functions that simplify many common tasks for package developping
+
+
+---
+## Exercise 1
+
+Enter your API key in R with ggmap::register_google (key = "number")
+
+---
+## Exercise 1
+
+Get the desired map
+
+.pull-left-50[
+
+```r
+# Get the map form source 
+# Stockholm University recentered
+su &lt;- get_map (
+  location = c(lon = 18.0590,
+               lat = 59.3644),  
+  source = "stamen",
+  maptype = "terrain",
+  zoom = 16, 
+  crop = TRUE) 
+
+# make the map into a 
+# ggmap object to plot it
+suMap &lt;- ggmap(su,
+   extent = "device")
+
+# Visualise the map
+print(suMap)
+```
+]
+
+.pull-right-50[
+&lt;img src="Maps_in_R_MLT_files/figure-html/get_SU_map2-1.png" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+
+Note:
+zoom between 3 (continent) to 21 (building), default value 10 (city)
+
+---
+## Exercise 1
+
+Get the locations
+
+(enable Geocoding API in the Google Console) 
+
+```r
+# Create a tibble of SU's important locations
+suLocations &lt;- tibble(
+  location = c("DEEP, Stockholm University",
+               "Stockholm University Library",
+               "Universitetet, Stockholm"))
+
+# Get the geocode (lat/lon) of the locations
+suCoord &lt;- geocode(suLocations$location)
+
+# Create a data frame of the data
+# for easier plotting
+suDat &lt;- cbind(suLocations, suCoord)
+
+suDat
+```
+
+```
+##                       location      lon      lat
+## 1   DEEP, Stockholm University 18.06013 59.36604
+## 2 Stockholm University Library 18.06097 59.36327
+## 3     Universitetet, Stockholm 18.05460 59.36519
+```
+
+---
+## Exercise 1
+
+Plot the locations
+
+.pull-left-50[
+
+```r
+# Plot important locations
+suLocationsMap &lt;- suMap +
+  geom_point(data = suDat,
+             aes(x = lon, y = lat),
+             color = 'red',
+             size = 5)
+
+print (suLocationsMap)
+```
+]
+
+.pull-right-50[
+&lt;img src="Maps_in_R_MLT_files/figure-html/plot_our_locations2-1.png" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+---
+## Exercise 1
+
+Add names of locations
+
+.pull-left-50[
+
+```r
+# Add name of places
+suLocMapNames &lt;- suLocationsMap +
+  geom_text(data = suDat, 
+            aes(label = location),
+            size = 5,
+            hjust = 0, 
+            vjust = -1)
+
+print (suLocMapNames)
+```
+]
+
+.pull-right-50[
+&lt;img src="Maps_in_R_MLT_files/figure-html/add_names2-1.png" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+---
+##Exercise 1
+
+Get the route 
+(enable Directions API in the Google Console)
+
+.pull-left-50[
+
+```r
+# Create the route with trek()
+# Deep to library
+goto_library &lt;- trek(
+  from = "DEEP, Stockholm University",
+  to = "Stockholm University Library",
+  structure = "route",
+  mode = "walking")
+
+# Add route to map
+deepToLibraryMap &lt;- suLocMapNames +
+  geom_path(data = goto_library,
+            aes(x = lon, y = lat),
+            colour = "blue",
+            size = 1.5,
+            alpha = .5,
+            lineend = "round")
+
+print (deepToLibraryMap)
+```
+]
+
+.pull-right-50[
+&lt;img src="Maps_in_R_MLT_files/figure-html/create route2-1.png" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+
+---
+##Exercise 1
+
+Get the route 
+(enable Directions API in the Google Console)
+
+.pull-left-50[
+
+```r
+# Library to t-bana station
+goto_tbana &lt;- trek(
+  from = "Stockholm University Library",
+  to = "Universitetet, Stockholm",
+  structure = "route", 
+  mode = "walking")
+
+# Add route to map
+LibraryToTbanaMap &lt;- suLocMapNames +
+  geom_path(data = goto_library,
+            aes(x = lon, y = lat),
+            colour = "blue",
+            size = 1.5,
+            alpha = .5,
+            lineend = "round") +
+  geom_path(data = goto_tbana,
+            aes(x = lon, y = lat),
+            colour = "blue",
+            size = 1.5,
+            alpha = .5,
+            lineend = "round")
+
+print (LibraryToTbanaMap)
+```
+]
+
+.pull-right-50[
+&lt;img src="Maps_in_R_MLT_files/figure-html/route4-1.png" style="display: block; margin: auto 0 auto auto;" /&gt;
+]
+
+---
+## Exercise 2
+
+Option local: Create a map of where you live, the closest metro station and your favorite coffee shop/restaurant/bar in town.
+
+Option UK: Create a map of the pubs and bars in the town “Oldham”, UK
+- info: https://nbisweden.github.io/RaukR-2018/ggmap_Sebastian/lab/ggmap_Sebastian.html#33_pubs
+- data: https://github.com/deepskillsr/Data_for_Students
+
+---
+## For more
+
+RaukR course: 
+- https://nbisweden.github.io/workshop-RaukR-1806/programme/ (see ggmap by Sebastian DiLorenzo)
+
+library (leaflet): open-source JavaScript libraries for interactive maps
+
+---
+name: end-slide
+class: end-slide
+
+# Thank you
+    </textarea>
+<script src="remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"ratio": "4:3",
+"highlightLanguage": "r",
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false,
+"slideNumberFormat": "Maps in R . %current%/%total%"
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function() {
+  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})();</script>
+
+<script>
+(function() {
+  var i, text, code, codes = document.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+})();
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
